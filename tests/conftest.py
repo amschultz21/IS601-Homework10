@@ -143,6 +143,22 @@ async def verified_user(db_session):
     await db_session.commit()
     return user
 
+from urllib.parse import urlencode
+
+@pytest.fixture
+async def user_token(async_client, verified_user):
+    form_data = {
+        "username": verified_user.email,
+        "password": "MySuperPassword$1234"
+    }
+    response = await async_client.post(
+        "/login/",
+        data=urlencode(form_data),
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    assert response.status_code == 200
+    return response.json()["access_token"]
+
 @pytest.fixture(scope="function")
 async def unverified_user(db_session):
     user_data = {
@@ -187,9 +203,10 @@ async def admin_user(db_session: AsyncSession):
         email="admin@example.com",
         first_name="John",
         last_name="Doe",
-        hashed_password="securepassword",
+        hashed_password=hash_password("securepassword"),
         role=UserRole.ADMIN,
         is_locked=False,
+        email_verified=True
     )
     db_session.add(user)
     await db_session.commit()
@@ -202,9 +219,10 @@ async def manager_user(db_session: AsyncSession):
         first_name="John",
         last_name="Doe",
         email="manager_user@example.com",
-        hashed_password="securepassword",
+        hashed_password=hash_password("securepassword"),
         role=UserRole.MANAGER,
         is_locked=False,
+        email_verified=True
     )
     db_session.add(user)
     await db_session.commit()
@@ -261,3 +279,33 @@ def user_response_data():
 @pytest.fixture
 def login_request_data():
     return {"username": "john_doe_123", "password": "SecurePassword123!"}
+
+@pytest.fixture
+async def admin_token(async_client, admin_user):
+    form_data = {
+        "username": admin_user.email,
+        "password": "securepassword"
+    }
+    response = await async_client.post(
+        "/login/",
+        data=urlencode(form_data),
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    assert response.status_code == 200
+    return response.json()["access_token"]
+
+from urllib.parse import urlencode
+
+@pytest.fixture
+async def manager_token(async_client, manager_user):
+    form_data = {
+        "username": manager_user.email,
+        "password": "securepassword"  # Must match the password in manager_user fixture
+    }
+    response = await async_client.post(
+        "/login/",
+        data=urlencode(form_data),
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    assert response.status_code == 200
+    return response.json()["access_token"]

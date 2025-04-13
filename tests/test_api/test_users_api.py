@@ -189,3 +189,33 @@ async def test_list_users_unauthorized(async_client, user_token):
         headers={"Authorization": f"Bearer {user_token}"}
     )
     assert response.status_code == 403  # Forbidden, as expected for regular user
+
+from urllib.parse import urlencode
+
+@pytest.fixture
+async def user_token(async_client, verified_user):
+    form_data = {
+        "username": verified_user.email,
+        "password": "MySuperPassword$1234"
+    }
+    response = await async_client.post(
+        "/login/",
+        data=urlencode(form_data),
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    assert response.status_code == 200
+    return response.json()["access_token"]
+
+@pytest.fixture
+async def admin_token(async_client, admin_user):
+    form_data = {
+        "username": admin_user.email,
+        "password": "securepassword"
+    }
+    response = await async_client.post(
+        "/login/",
+        data=urlencode(form_data),
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    assert response.status_code == 200
+    return response.json()["access_token"]
