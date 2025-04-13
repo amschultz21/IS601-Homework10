@@ -2,23 +2,19 @@
 
 🔗 Closed GitHub Issues
 
-Username validation fails for special characters and short nicknames
+1. [Username validation fails for special characters and short nicknames](https://github.com/amschultz21/IS601-Homework10/issues/1)
 
-Password schema allows weak passwords (missing uppercase, etc.)
+2. [Password schema allows weak passwords (missing uppercase, etc.)](https://github.com/amschultz21/IS601-Homework10/issues/2)
 
-Test coverage missing for invalid password formats
+3. [Test coverage missing for invalid password formats](https://github.com/amschultz21/IS601-Homework10/issues/3)
 
-Edge cases for profile updates not fully tested
+4. [Edge cases for profile updates not fully tested](https://github.com/amschultz21/IS601-Homework10/issues/4)
 
-URL validation missing for profile fields
+5. [URL validation missing for profile fields](https://github.com/amschultz21/IS601-Homework10/issues/5)
 
 All issues include accompanying tests and code changes merged to the main branch.
 
-🐳 DockerHub Link
-
-View the deployed image: https://hub.docker.com/r/amschultz21/is601-homework10
-
-✅ Achieved 100% test coverage using pytest and pytest-cov.
+✅ Achieved 100% test coverage using pytest.
 Unit tests cover schema validation, edge cases, error handling, and success paths for user-related API endpoints.
 
 🧠 Reflection
