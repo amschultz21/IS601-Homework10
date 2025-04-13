@@ -233,6 +233,7 @@ async def manager_user(db_session: AsyncSession):
 @pytest.fixture
 def user_base_data():
     return {
+        "nickname": "johnny",
         "username": "john_doe_123",
         "email": "john.doe@example.com",
         "full_name": "John Doe",
@@ -259,26 +260,37 @@ def user_create_data(user_base_data):
 def user_update_data():
     return {
         "email": "john.doe.new@example.com",
+        "first_name": "John",
         "full_name": "John H. Doe",
         "bio": "I specialize in backend development with Python and Node.js.",
         "profile_picture_url": "https://example.com/profile_pictures/john_doe_updated.jpg"
     }
 
+from uuid import uuid4
+from datetime import datetime
+
 @pytest.fixture
 def user_response_data():
     return {
-        "id": "unique-id-string",
-        "username": "testuser",
+        "id": uuid4(),
+        "nickname": "testuser",
         "email": "test@example.com",
-        "last_login_at": datetime.now(),
+        "role": "AUTHENTICATED",  # ✅ required enum value
+        "is_professional": False,  # ✅ required field
+        "first_name": "John",
+        "last_name": "Doe",
+        "bio": "Experienced software developer",
+        "profile_picture_url": "https://example.com/profiles/john.jpg",
+        "linkedin_profile_url": "https://linkedin.com/in/johndoe",
+        "github_profile_url": "https://github.com/johndoe",
         "created_at": datetime.now(),
         "updated_at": datetime.now(),
-        "links": []
+        "last_login_at": datetime.now(),  # only if your test schema expects this
+        "links": []  # safe default
     }
-
 @pytest.fixture
 def login_request_data():
-    return {"username": "john_doe_123", "password": "SecurePassword123!"}
+    return {"email": "john_doe_123", "password": "SecurePassword123!"}
 
 @pytest.fixture
 async def admin_token(async_client, admin_user):
